@@ -21,7 +21,7 @@ strat.check = function(candle) {
   	sum += (candle.open + candle.close)/2 * candle.trades;
   }
   let VWAP= sum/totalTrades;
-  console.log(candle);
+  //console.log(candle); //Uncomment for more details on trades per minute
   console.log("VWAP: "+ VWAP);
 
 // I was given to indicate buy when current price > VWAP.
