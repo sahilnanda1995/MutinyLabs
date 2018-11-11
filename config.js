@@ -32,8 +32,8 @@ config.watch = {
 
 config.tradingAdvisor = {
   enabled: true,
-  method: 'mlabs',
-  candleSize: 1,
+  method: 'testStrategy1',
+  candleSize: 60*4,
   historySize: 10,
 }
 

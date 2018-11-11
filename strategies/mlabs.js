@@ -25,11 +25,11 @@ strat.check = function(candle) {
   console.log("VWAP: "+ VWAP);
 
 // I was given to indicate buy when current price > VWAP.
-  if (candle.open > VWAP) {
+  if (candle.open < VWAP) {
   	this.advice('long');
-  }//else{         //if we want the selling indicator too we can uncomment this else element.
-  	//this.advice('short');
-  //}
+  }else{         //if we want the selling indicator too we can uncomment this else element.
+  	this.advice('short');
+  }
 }
 
 module.exports = strat;
