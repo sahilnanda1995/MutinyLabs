@@ -32,7 +32,7 @@ config.watch = {
 
 config.tradingAdvisor = {
   enabled: true,
-  method: 'testStrategy1',
+  method: 'trailingStop2',
   candleSize: 60*4,
   historySize: 10,
 }

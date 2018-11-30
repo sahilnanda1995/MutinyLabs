@@ -16,6 +16,8 @@ const Logger = require('./logger');
 const PerformanceAnalyzer = function() {
   _.bindAll(this);
 
+
+
   this.dates = {
     start: false,
     end: false
@@ -132,8 +134,10 @@ PerformanceAnalyzer.prototype.registerRoundtripPart = function(trade) {
     this.handleCompletedRoundtrip();
   }
 }
-
+var count = 0;
+var countWin = 0;
 PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
+  
   var roundtrip = {
     id: this.roundTrip.id,
 
@@ -150,6 +154,14 @@ PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
 
   roundtrip.pnl = roundtrip.exitBalance - roundtrip.entryBalance;
   roundtrip.profit = (100 * roundtrip.exitBalance / roundtrip.entryBalance) - 100;
+  console.log("+++++++++-------++++++++++"+ roundtrip.profit);
+  
+  count++;
+
+  if(roundtrip.profit > 0){
+    countWin++;
+//    console.log(count);
+  }
 
   this.roundTrips[this.roundTrip.id] = roundtrip;
 
@@ -209,7 +221,8 @@ PerformanceAnalyzer.prototype.calculateReportStatistics = function() {
     startBalance: this.start.balance,
     exposure: percentExposure,
     sharpe,
-    downside
+    downside,
+    hit_ratio: countWin/count * 100
   }
 
   report.alpha = report.profit - report.market;

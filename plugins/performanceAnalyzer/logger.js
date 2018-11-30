@@ -111,6 +111,7 @@ if(mode === 'backtest') {
   
     log.info(`(PROFIT REPORT) sharpe ratio:\t\t\t ${report.sharpe}`);
     log.info(`(PROFIT REPORT) expected downside:\t\t ${report.downside}`);
+    log.info(`(PROFIT REPORT) Hit-ratio:\t\t\t ${report.hit_ratio}%`);
   }
   
   Logger.prototype.handleRoundtrip = function(rt) {
