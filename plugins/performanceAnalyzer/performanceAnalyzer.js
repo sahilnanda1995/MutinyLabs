@@ -157,7 +157,7 @@ PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
 
     duration: this.roundTrip.exit.date.diff(this.roundTrip.entry.date)
   }
-
+  // for giving date and buy/sell price to the tradingView chart.
   let buyDate = new Date(roundtrip.entryAt);
   let sellDate = new Date(roundtrip.exitAt);
   roundtrip.pnl = roundtrip.exitBalance - roundtrip.entryBalance;
