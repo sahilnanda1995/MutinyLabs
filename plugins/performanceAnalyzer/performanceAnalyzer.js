@@ -13,6 +13,8 @@ const watchConfig = config.watch;
 
 const Logger = require('./logger');
 
+const fs = require('fs');
+
 const PerformanceAnalyzer = function() {
   _.bindAll(this);
 
@@ -136,8 +138,12 @@ PerformanceAnalyzer.prototype.registerRoundtripPart = function(trade) {
 }
 var count = 0;
 var countWin = 0;
+
+
 PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
   
+
+
   var roundtrip = {
     id: this.roundTrip.id,
 
@@ -152,10 +158,55 @@ PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
     duration: this.roundTrip.exit.date.diff(this.roundTrip.entry.date)
   }
 
+  let buyDate = new Date(roundtrip.entryAt);
+  let sellDate = new Date(roundtrip.exitAt);
   roundtrip.pnl = roundtrip.exitBalance - roundtrip.entryBalance;
   roundtrip.profit = (100 * roundtrip.exitBalance / roundtrip.entryBalance) - 100;
   console.log("+++++++++-------++++++++++"+ roundtrip.profit);
-  
+  if (count == 0) {
+    fs.writeFile('testResults.js', `tvWidget.chart().createShape({time: ${buyDate.getTime()/1000}, price: ${roundtrip.entryPrice}}, {shape: 'arrow_up'});\n`, function(err){
+      if (err) console.log(err);
+      console.log("Successfully Written to File.");
+
+      fs.appendFile('testResults.js', `tvWidget.chart().createShape({time: ${sellDate.getTime()/1000}, price: ${roundtrip.exitPrice}}, {shape: 'arrow_down'});\n`, function(err){
+        if (err) console.log(err);
+        console.log("Successfully appended to File.");//{shape: 'balloon', text: "hey", backgroundColor: '#7FFF00', transparency: 0, fillBackground: true});
+    });
+    if (roundtrip.profit > 0){
+        fs.appendFile('testResults.js', `tvWidget.chart().createShape({time: ${sellDate.getTime()/1000}}, {shape: 'balloon', text: ${roundtrip.profit}, backgroundColor: '#7FFF00', transparency: 20, fillBackground: true});\n`, function(err){
+        if (err) console.log(err);
+        console.log("Successfully appended to File.");
+    });
+  }else{
+      fs.appendFile('testResults.js', `tvWidget.chart().createShape({time: ${sellDate.getTime()/1000}}, {shape: 'balloon', text: ${roundtrip.profit}, backgroundColor: '#FF4500', transparency: 20, fillBackground: true});\n`, function(err){
+        if (err) console.log(err);
+        console.log("Successfully appended to File.");
+    });
+  }
+    });  
+  }else {
+    fs.appendFile('testResults.js', `tvWidget.chart().createShape({time: ${buyDate.getTime()/1000}, price: ${roundtrip.entryPrice}}, {shape: 'arrow_up'});\n`, function(err){
+        if (err) console.log(err);
+        console.log("Successfully appended to File.");
+    });
+    fs.appendFile('testResults.js', `tvWidget.chart().createShape({time: ${sellDate.getTime()/1000}, price: ${roundtrip.exitPrice}}, {shape: 'arrow_down'});\n`, function(err){
+      if (err) console.log(err);
+      console.log("Successfully appended to File.");
+      if (roundtrip.profit > 0){
+        fs.appendFile('testResults.js', `tvWidget.chart().createShape({time: ${sellDate.getTime()/1000}}, {shape: 'balloon', text: ${roundtrip.profit}, backgroundColor: '#7FFF00', transparency: 20, fillBackground: true});\n`, function(err){
+        if (err) console.log(err);
+        console.log("Successfully appended to File.");
+      });
+    }else{
+        fs.appendFile('testResults.js', `tvWidget.chart().createShape({time: ${sellDate.getTime()/1000}}, {shape: 'balloon', text: ${roundtrip.profit}, backgroundColor: '#FF4500', transparency: 20, fillBackground: true});\n`, function(err){
+        if (err) console.log(err);
+        console.log("Successfully appended to File.");
+      });
+    }
+  });
+  }
+
+
   count++;
 
   if(roundtrip.profit > 0){
@@ -174,7 +225,7 @@ PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
   // track losses separately for downside report
   if (roundtrip.exitBalance < roundtrip.entryBalance)
     this.losses.push(roundtrip);
-  
+   
 }
 
 PerformanceAnalyzer.prototype.calculateReportStatistics = function() {
